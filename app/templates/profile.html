@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SchoolS - Профил</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1><a href="{{ url_for('index') }}">SchoolS</a></h1>
+        <nav>
+            <a href="{{ url_for('courses') }}">Курсове</a>
+            <a href="{{ url_for('profile') }}">Профил</a>
+            <a href="{{ url_for('homework') }}">Домашни</a>
+            <a href="{{ url_for('statistics') }}">Статистики</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h2>Моят Профил</h2>
+
+    <div class="profile-card">
+        <img src="{{ url_for('static', filename='user.png') }}" alt="Профилна снимка" class="profile-image">
+        <h3>{{ current_user.username }}</h3>
+        <p>Ниво на обучение: {{ current_user.level }}</p>
+        <p>Група: {{ current_user.group }}</p>
+        <a href="#" class="btn">Редактирай профил</a>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 SchoolS. Всички права запазени.</p>
+</footer>
+
+</body>
+</html>
