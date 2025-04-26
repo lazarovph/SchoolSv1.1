@@ -75,3 +75,50 @@ footer {
     margin-top: 3rem;
     font-size: 0.9rem;
 }
+
+/* Стилове за профила */
+.profile-info {
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info h3 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.profile-info p {
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+.profile-actions {
+    margin-top: 30px;
+}
+
+.profile-actions .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.profile-actions .btn:hover {
+    background-color: #45a049;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+    margin-top: 50px;
+}

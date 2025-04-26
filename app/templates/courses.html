@@ -1,59 +1,19 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SchoolS - Курсове</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Courses</title>
 </head>
 <body>
-
-<header>
-    <div class="container">
-        <h1><a href="{{ url_for('index') }}">SchoolS</a></h1>
-        <nav>
-            <a href="{{ url_for('courses') }}">Курсове</a>
-            <a href="{{ url_for('profile') }}">Профил</a>
-            <a href="{{ url_for('homework') }}">Домашни</a>
-            <a href="{{ url_for('statistics') }}">Статистики</a>
-        </nav>
-    </div>
-</header>
-
-<main class="container">
-    <h2>Курсове по английски</h2>
-    <p>Избери курс според своето ниво и започни обучението си!</p>
-
-    <div class="courses-grid">
-        <div class="course-card">
-            <h3>Ниво A1 - Начинаещ</h3>
-            <p>Основи на английския език.</p>
-            <a href="#" class="btn">Започни</a>
-        </div>
-
-        <div class="course-card">
-            <h3>Ниво A2 - Елементарно</h3>
-            <p>Развитие на базови умения.</p>
-            <a href="#" class="btn">Започни</a>
-        </div>
-
-        <div class="course-card">
-            <h3>Ниво B1 - Средно</h3>
-            <p>Разговорен английски и граматика.</p>
-            <a href="#" class="btn">Започни</a>
-        </div>
-
-        <div class="course-card">
-            <h3>Ниво B2 - Средно напреднал</h3>
-            <p>Подготовка за сертификати.</p>
-            <a href="#" class="btn">Започни</a>
-        </div>
-    </div>
-</main>
-
-<footer>
-    <p>© 2025 SchoolS. Всички права запазени.</p>
-</footer>
-
+    <h1>Courses</h1>
+    <ul>
+        {% for course in courses %}
+            <li>
+                <h3>{{ course.name }}</h3>
+                <p>{{ course.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SchoolS - Начало</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1><a href="{{ url_for('home') }}">SchoolS</a></h1>
+        <nav>
+            <a href="{{ url_for('courses') }}">Курсове</a>
+            <a href="{{ url_for('homework') }}">Домашни</a>
+            <a href="{{ url_for('profile') }}">Профил</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h2>Добре дошли в SchoolS!</h2>
+    <p>Вашата онлайн платформа за учене, курсове, домашни и още много!</p>
+
+    <div class="statistics">
+        <div class="stat-item">
+            <h3>Курсове</h3>
+            <p>Разгледайте наличните курсове по английски за всички нива.</p>
+        </div>
+        <div class="stat-item">
+            <h3>Домашни</h3>
+            <p>Вижте и предайте вашите домашни работи онлайн.</p>
+        </div>
+        <div class="stat-item">
+            <h3>Профил</h3>
+            <p>Проследете вашия напредък и статистики.</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 SchoolS. Всички права запазени.
+</footer>
+
+</body>
+</html>

@@ -10,36 +10,40 @@
 
 <header>
     <div class="container">
-        <h1><a href="{{ url_for('index') }}">SchoolS</a></h1>
+        <h1><a href="{{ url_for('home') }}">SchoolS</a></h1>
         <nav>
             <a href="{{ url_for('courses') }}">Курсове</a>
-            <a href="{{ url_for('profile') }}">Профил</a>
             <a href="{{ url_for('homework') }}">Домашни</a>
-            <a href="{{ url_for('statistics') }}">Статистики</a>
+            <a href="{{ url_for('profile') }}">Профил</a>
         </nav>
     </div>
 </header>
 
 <main class="container">
-    <h2>Моите Домашни</h2>
+    <h2>Домашни задачи</h2>
 
     <div class="homework-list">
-        {% for hw in homeworks %}
-            <div class="homework-item">
-                <h3>{{ hw.title }}</h3>
-                <p>Краен срок: {{ hw.deadline.strftime('%d.%m.%Y') }}</p>
-                <p>Статус: {{ hw.status }}</p>
-                <a href="#" class="btn">Виж детайли</a>
-            </div>
-        {% else %}
-            <p>Няма зададени домашни.</p>
-        {% endfor %}
+        <div class="homework-item">
+            <h3>Домашно за курс A1</h3>
+            <p>Попълнете упражненията в PDF файла за началния курс по английски.</p>
+            <a href="{{ url_for('download_homework', homework_id=1) }}">Изтегли домашното</a>
+        </div>
+        <div class="homework-item">
+            <h3>Домашно за курс B1</h3>
+            <p>Решете задачите от теста за напреднали. Подгответе се за следващия урок.</p>
+            <a href="{{ url_for('download_homework', homework_id=2) }}">Изтегли домашното</a>
+        </div>
+        <div class="homework-item">
+            <h3>Домашно за курс C1</h3>
+            <p>Изпратете вашето есе по зададена тема за експертния курс по английски.</p>
+            <a href="{{ url_for('download_homework', homework_id=3) }}">Изтегли домашното</a>
+        </div>
     </div>
 
 </main>
 
 <footer>
-    <p>© 2025 SchoolS. Всички права запазени.</p>
+    &copy; 2025 SchoolS. Всички права запазени.
 </footer>
 
 </body>

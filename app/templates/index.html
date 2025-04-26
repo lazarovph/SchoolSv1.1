@@ -1,35 +1,19 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SchoolS - Начало</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Welcome to School</title>
 </head>
 <body>
-
-<header>
-    <div class="container">
-        <h1><a href="{{ url_for('index') }}">SchoolS</a></h1>
-        <nav>
-            <a href="{{ url_for('courses') }}">Курсове</a>
-            <a href="{{ url_for('profile') }}">Профил</a>
-            <a href="{{ url_for('homework') }}">Домашни</a>
-            <a href="{{ url_for('statistics') }}">Статистики</a>
-        </nav>
-    </div>
-</header>
-
-<main class="container">
-    <h2>Добре дошъл в SchoolS!</h2>
-    <p>Тук можеш да учиш английски език онлайн, да следиш напредъка си, да изпълняваш домашни и да участваш в тестове!</p>
-
-    <a href="{{ url_for('courses') }}" class="btn">Разгледай Курсовете</a>
-</main>
-
-<footer>
-    <p>© 2025 SchoolS. Всички права запазени.</p>
-</footer>
-
+    <h1>Welcome to the Online Learning Platform!</h1>
+    <p>Explore our courses, levels, and tasks.</p>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('courses') }}">Courses</a></li>
+            <li><a href="{{ url_for('levels') }}">Levels</a></li>
+            <li><a href="{{ url_for('tasks') }}">Tasks</a></li>
+        </ul>
+    </nav>
 </body>
 </html>

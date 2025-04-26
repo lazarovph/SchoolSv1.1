@@ -1,36 +1,43 @@
-from flask import render_template, redirect, url_for, request, flash
-from app import db
-from app.models import User, Task, Solution
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, current_user, logout_user
-from app import create_app
+from app import db  # Импортиране на db само тук, когато е нужно
+from app.models import User, Task, Solution
 
-app = create_app()
+routes = Blueprint('routes', __name__)
 
+@routes.route('/courses')
+def courses():
+    courses = []  # Ако имаш модел Course, го добави тук
+    return render_template('courses.html', courses=courses)
 
-@app.route('/')
+@routes.route('/levels')
+def levels():
+    return render_template('levels.html')
+
+@routes.route('/')
 @login_required
 def index():
     return render_template('index.html')
 
-@app.route('/tasks')
+@routes.route('/tasks')
 @login_required
 def tasks():
     tasks = Task.query.all()
     return render_template('tasks.html', tasks=tasks)
 
-@app.route('/task/<int:task_id>')
+@routes.route('/task/<int:task_id>')
 @login_required
 def task(task_id):
     task = Task.query.get_or_404(task_id)
     solutions = Solution.query.filter_by(task_id=task.id).all()
     return render_template('task_detail.html', task=task, solutions=solutions)
 
-@app.route('/create_task', methods=['GET', 'POST'])
+@routes.route('/create_task', methods=['GET', 'POST'])
 @login_required
 def create_task():
     if current_user.role != 'teacher':
         flash('You are not authorized to create tasks', 'danger')
-        return redirect(url_for('index'))
+        return redirect(url_for('routes.index'))
 
     if request.method == 'POST':
         title = request.form['title']
@@ -41,11 +48,11 @@ def create_task():
         db.session.add(task)
         db.session.commit()
         flash('Task created successfully', 'success')
-        return redirect(url_for('tasks'))
+        return redirect(url_for('routes.tasks'))
 
     return render_template('create_task.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -53,17 +60,17 @@ def login():
 
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:  # This should be hashed in production
+        if user and user.password == password:  # В продукция трябва да е с hashing
             login_user(user)
             flash('Login successful', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('routes.index'))
         else:
             flash('Login failed. Check username and/or password.', 'danger')
 
     return render_template('login.html')
 
-@app.route('/logout')
+@routes.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('routes.login'))
