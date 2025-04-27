@@ -1,11 +1,11 @@
-# app/models/user.py
 from app import db
 
 class Solution(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
+    content = db.Column(db.String(1000), nullable=False)
+
+    task = db.relationship('Task', backref=db.backref('solutions', lazy=True))
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<Solution {self.id}>'

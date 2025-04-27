@@ -1,0 +1,7 @@
+<h1>All Tasks</h1>
+{% for task in tasks %}
+    <div>
+        <h2><a href="{{ url_for('routes.task', task_id=task.id) }}">{{ task.title }}</a></h2>
+        <p>{{ task.description }}</p>
+    </div>
+{% endfor %}

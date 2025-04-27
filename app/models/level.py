@@ -1,5 +1,3 @@
-# app/models/level.py
-
 from app import db
 
 class Level(db.Model):

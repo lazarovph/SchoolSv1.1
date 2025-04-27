@@ -1,26 +1,27 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_login import LoginManager
 
-# Създаване на обектите за база данни, миграции и потребителско влизане
 db = SQLAlchemy()
-migrate = Migrate()
 login_manager = LoginManager()
-login_manager.login_view = 'login'
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('config')  # Това зарежда config.py
+    
+    app.config['SECRET_KEY'] = 'd095dee3463161b3a24b7c9defde4421'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Инициализиране на db, migrate и login_manager с app
     db.init_app(app)
-    migrate.init_app(app, db)
     login_manager.init_app(app)
 
-    # Регистриране на blueprint-а за маршрути (routes)
+    from app.models import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     from app.routes import routes
     app.register_blueprint(routes)
 
-    # Връщане на конфигурираното приложение
     return app

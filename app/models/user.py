@@ -1,5 +1,4 @@
-# app/models/user.py
-from app import db
+from app import db  # db вече е инициализиран тук, не в __init__.py
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

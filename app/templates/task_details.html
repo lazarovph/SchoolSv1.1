@@ -1,0 +1,9 @@
+<h1>{{ task.title }}</h1>
+<p>{{ task.description }}</p>
+<h3>Solutions:</h3>
+{% for solution in solutions %}
+    <div>
+        <p>{{ solution.content }}</p>
+        <small>Submitted at: {{ solution.submitted_at }}</small>
+    </div>
+{% endfor %}

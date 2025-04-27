@@ -1,23 +1,25 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, login_required, current_user, logout_user
-from app import db  # Импортиране на db само тук, когато е нужно
-from app.models import User, Task, Solution
+from app import db
+from app.models import User, Task, Solution, Course
 
 routes = Blueprint('routes', __name__)
-
-@routes.route('/courses')
-def courses():
-    courses = []  # Ако имаш модел Course, го добави тук
-    return render_template('courses.html', courses=courses)
-
-@routes.route('/levels')
-def levels():
-    return render_template('levels.html')
 
 @routes.route('/')
 @login_required
 def index():
     return render_template('index.html')
+
+@routes.route('/courses')
+@login_required
+def courses():
+    courses = Course.query.all()
+    return render_template('courses.html', courses=courses)
+
+@routes.route('/levels')
+@login_required
+def levels():
+    return render_template('levels.html')
 
 @routes.route('/tasks')
 @login_required
@@ -60,7 +62,7 @@ def login():
 
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:  # В продукция трябва да е с hashing
+        if user and user.password == password:
             login_user(user)
             flash('Login successful', 'success')
             return redirect(url_for('routes.index'))
