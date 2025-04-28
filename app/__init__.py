@@ -1,29 +1,28 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_mail import Mail
 
-# Инициализация на базата данни
+# Инициализация на базата данни и Mail
 db = SQLAlchemy()
-
-# Инициализация на LoginManager
-login_manager = LoginManager()
-login_manager.login_view = "routes.login"  # Пренасочване към login, ако потребителят не е влязъл
+mail = Mail()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-    app.config['SECRET_KEY'] = 'your_secret_key'  # Променете това на истински ключ за продукция
+    
+    # Конфигурация на приложението
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'  # Променете на вашия URI за базата данни
+    app.config['SECRET_KEY'] = 'your_secret_key'  # Задайте таен ключ
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Примерен mail server
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'your_email_password'
 
+    # Инициализация на db и mail
     db.init_app(app)
-    login_manager.init_app(app)  # Инициализиране на LoginManager
+    mail.init_app(app)
 
     from app.routes import routes as routes_blueprint
     app.register_blueprint(routes_blueprint)
 
     return app
-
-# Зареждаме потребителя по неговия ID
-@login_manager.user_loader
-def load_user(user_id):
-    from app.models import User
-    return User.query.get(int(user_id))

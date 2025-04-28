@@ -1,12 +1,35 @@
-<!-- templates/register.html -->
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <div class="form-group">
+        <label for="username">Username</label>
+        {{ form.username(class="form-control") }}
+    </div>
 
-{% extends "layout.html" %}
+    <div class="form-group">
+        <label for="email">Email</label>
+        {{ form.email(class="form-control") }}
+    </div>
 
-{% block content %}
-    <h2>Регистрирайте се</h2>
-    <form method="POST">
-        <input type="text" name="username" placeholder="Потребителско име" required>
-        <input type="password" name="password" placeholder="Парола" required>
-        <button type="submit">Регистрирайте се</button>
-    </form>
-{% endblock %}
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        {{ form.phone(class="form-control") }}  <!-- Тук е полето за телефон -->
+    </div>
+
+    <div class="form-group">
+        <label for="role">Role</label>
+        {{ form.role(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        {{ form.password(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+        {{ form.confirm_password(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

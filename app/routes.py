@@ -1,99 +1,38 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app as app
 from flask_login import login_user, login_required, current_user, logout_user
-from app import db
+from app import db, mail
 from app.models import User, Task, Solution, Course
 from app.auth.forms import LoginForm, RegistrationForm  # Импортираме формите
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from app import db
-from app.models import User
-from flask_login import login_user, login_required
+from flask_mail import Message
+from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer as Serializer
 
+# Създаване на Blueprint след всички рутове
 routes = Blueprint('routes', __name__)
 
-@routes.route('/')
-@login_required
-def index():
-    return render_template('index.html')
+# Генериране на токен за потвърждение
+def generate_confirmation_token(email):
+    s = Serializer(app.config['SECRET_KEY'], expires_in=3600)  # Токенът изтича след 1 час
+    return s.dumps({'email': email}).decode('utf-8')
 
-@routes.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-
-        if user and user.password == password:
-            login_user(user)
-            flash('Успешно влезе!', 'success')
-            return redirect(url_for('routes.index'))
-        else:
-            flash('Грешка при вход. Проверете потребителското име и парола.', 'danger')
-
-    return render_template('login.html')
-
-@routes.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Успешна регистрация!', 'success')
-        return redirect(url_for('routes.login'))
-
-    return render_template('register.html')
-
-routes = Blueprint('routes', __name__)
-
-@routes.route('/')
-@login_required
-def index():
-    return render_template('index.html')
+# Потвърждение на токена
+def confirm_token(token):
+    s = Serializer(app.config['SECRET_KEY'])
+    try:
+        email = s.loads(token)['email']
+    except:
+        return False
+    return email
 
 @routes.route('/courses')
-@login_required
 def courses():
-    courses = Course.query.all()
-    return render_template('courses.html', courses=courses)
+    # Логика за курсовете (например извличане на данни от базата данни)
+    courses_list = Course.query.all()  # Ако имате модел Course
+    return render_template('courses.html', courses=courses_list)
 
-@routes.route('/levels')
-@login_required
-def levels():
-    return render_template('levels.html')
-
-@routes.route('/tasks')
-@login_required
-def tasks():
-    tasks = Task.query.all()
-    return render_template('tasks.html', tasks=tasks)
-
-@routes.route('/task/<int:task_id>')
-@login_required
-def task(task_id):
-    task = Task.query.get_or_404(task_id)
-    solutions = Solution.query.filter_by(task_id=task.id).all()
-    return render_template('task_detail.html', task=task, solutions=solutions)
-
-@routes.route('/create_task', methods=['GET', 'POST'])
-@login_required
-def create_task():
-    if current_user.role != 'teacher':
-        flash('You are not authorized to create tasks', 'danger')
-        return redirect(url_for('routes.index'))
-
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        due_date = request.form['due_date']
-
-        task = Task(title=title, description=description, due_date=due_date, created_by=current_user.id)
-        db.session.add(task)
-        db.session.commit()
-        flash('Task created successfully', 'success')
-        return redirect(url_for('routes.tasks'))
-
-    return render_template('create_task.html')
+@routes.route('/')
+def index():
+    return render_template('index.html')
 
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,7 +43,7 @@ def login():
 
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and check_password_hash(user.password, password):  # Проверяваме с криптираната парола
             login_user(user)
             flash('Login successful', 'success')
             return redirect(url_for('routes.index'))
@@ -112,6 +51,61 @@ def login():
             flash('Login failed. Check username and/or password.', 'danger')
 
     return render_template('login.html', form=form)  # Предаваме формата към шаблона
+
+@routes.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()  # Създаваме формата за регистрация
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        phone = form.phone.data
+        role = form.role.data
+        password = form.password.data
+
+        # Проверка дали потребителят или имейлът вече съществуват
+        if User.query.filter_by(username=username).first():
+            flash('Username already exists. Please choose another one.', 'danger')
+            return redirect(url_for('routes.register'))
+        
+        if User.query.filter_by(email=email).first():
+            flash('Email is already registered. Please use a different email.', 'danger')
+            return redirect(url_for('routes.register'))
+
+        password_hash = generate_password_hash(password)  # Криптиране на паролата
+
+        # Създаваме нов потребител със събраните данни
+        new_user = User(username=username, email=email, phone=phone, role=role, password=password_hash)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Генерираме потвърдителен токен и изпращаме имейл
+        token = generate_confirmation_token(email)
+        confirm_url = url_for('routes.confirm_email', token=token, _external=True)
+        html = f'<p>Натиснете тук, за да потвърдите вашия имейл: <a href="{confirm_url}">Потвърдете имейл</a></p>'
+        subject = "Потвърдете имейл адреса си"
+        msg = Message(subject, recipients=[email], html=html)
+        mail.send(msg)
+
+        flash('Registration successful! Please check your email to confirm.', 'success')
+        return redirect(url_for('routes.login'))
+
+    return render_template('register.html', form=form)  # Предаваме формата към шаблона
+
+@routes.route('/confirm_email/<token>')
+def confirm_email(token):
+    email = confirm_token(token)
+    if email:
+        user = User.query.filter_by(email=email).first_or_404()
+        if user.is_confirmed:
+            flash('Email has already been confirmed.', 'info')
+        else:
+            user.is_confirmed = True  # Потребителят е потвърдил имейла си
+            db.session.commit()
+            flash('Email confirmed!', 'success')
+        return redirect(url_for('routes.login'))
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+        return redirect(url_for('routes.index'))
 
 @routes.route('/logout')
 @login_required

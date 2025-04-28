@@ -1,8 +1,16 @@
-<h1>Courses</h1>
-{% for course in courses %}
-    <div>
-        <h2>{{ course.title }}</h2>
-        <p>{{ course.description }}</p>
-        <small>Created at: {{ course.created_at }}</small>
-    </div>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсове</title>
+</head>
+<body>
+    <h1>Курсове</h1>
+    <ul>
+        {% for course in courses %}
+            <li>{{ course.name }} - {{ course.description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

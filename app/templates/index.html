@@ -3,32 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Начална страница</title>
+    <title>Онлайн обучение</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
-        <h1>Добре дошли в нашата онлайн класна стая</h1>
         <nav>
             <ul>
-                {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('routes.index') }}">Начало</a></li>
-                    <li><a href="{{ url_for('routes.logout') }}">Изход</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('routes.login') }}">Вход</a></li>
-                    <li><a href="{{ url_for('routes.register') }}">Регистрация</a></li>
-                {% endif %}
+                <li><a href="{{ url_for('routes.index') }}">Начало</a></li>
+                <li><a href="{{ url_for('routes.login') }}">Вход</a></li>
+                <li><a href="{{ url_for('routes.register') }}">Регистрация</a></li>
+                <li><a href="{{ url_for('routes.courses') }}">Курсове</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <h2>Добре дошли в нашата платформа за онлайн уроци!</h2>
-        <p>Тук можете да се регистрирате и започнете своето обучение.</p>
-    </main>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Добре дошли в онлайн обучението!</h1>
+            <p>Научете нови умения с нашите курсове по различни теми.</p>
+            <a href="{{ url_for('routes.register') }}" class="btn">Започни сега</a>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; 2025 Онлайн Класна Стая. Всички права запазени.</p>
+        <p>&copy; 2025 Онлайн обучение | Всички права запазени.</p>
     </footer>
 </body>
 </html>

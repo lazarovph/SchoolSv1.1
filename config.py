@@ -1,3 +1,9 @@
 SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = 'some_secret_key'
+MAIL_SERVER = 'smtp.gmail.com'  # Примерен SMTP сървър
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_USERNAME = 'your-email@gmail.com'  # Вашият имейл
+MAIL_PASSWORD = 'your-email-password'  # Вашата парола
+MAIL_DEFAULT_SENDER = 'your-email@gmail.com'  # Имейл на изпращача
